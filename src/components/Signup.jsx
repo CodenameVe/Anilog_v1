@@ -38,8 +38,16 @@ function Signup({ onClose, onSwitchToLogin }) {
       errorTimeoutRef.current = setTimeout(() => setSignupError(""), 10000)
       return
     }
-    if (password.length < 6) {
-      setSignupError("Password must be at least 6 characters")
+
+    // Strong password criteria
+    const passwordErrors = []
+    if (password.length < 8) passwordErrors.push("at least 8 characters")
+    if (!/[A-Z]/.test(password)) passwordErrors.push("1 uppercase letter")
+    if (!/[a-z]/.test(password)) passwordErrors.push("1 lowercase letter")
+    if (!/[0-9]/.test(password)) passwordErrors.push("1 number")
+    if (!/[^A-Za-z0-9]/.test(password)) passwordErrors.push("1 special character (!@#$...)")
+    if (passwordErrors.length > 0) {
+      setSignupError(`Password must have: ${passwordErrors.join(", ")}`)
       setIsLoading(false)
       errorTimeoutRef.current = setTimeout(() => setSignupError(""), 10000)
       return

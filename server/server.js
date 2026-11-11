@@ -24,12 +24,12 @@ app.get('/api/test', async (req, res) => {
   }
 });
 
-// --- PUBLIC PROFILE: Get user by username (no auth) ---
+// --- PUBLIC PROFILE: Get user by username ---
 app.get('/api/users/:username', async (req, res) => {
   const { username } = req.params;
   
   try {
-    // LOWER for case-insensitive: Naruto_Fan == naruto_fan
+    // LOWER for case-insensitive
     const result = await pool.query(
       'SELECT id, username, avatar_url, created_at FROM users WHERE LOWER(username) = LOWER($1)',
       [username]
@@ -62,7 +62,7 @@ app.get('/api/users/:username', async (req, res) => {
   }
 });
 
-// --- PUBLIC PROFILE: Get user's logs (no auth) ---
+// --- PUBLIC PROFILE: Get user's logs ---
 app.get('/api/users/:username/logs', async (req, res) => {
   const { username } = req.params;
 
@@ -78,7 +78,6 @@ app.get('/api/users/:username/logs', async (req, res) => {
 
     const userId = userResult.rows[0].id;
 
-    // Same query you use for GET /api/logs, but filtered by this userId
     const logsResult = await pool.query(
       'SELECT * FROM logs WHERE user_id = $1 ORDER BY watched_on DESC, created_at DESC',
       [userId]
@@ -103,6 +102,18 @@ app.post('/api/signup', async (req, res) => {
 
   if (username.length < 3 || username.length > 20) {
     return res.status(400).json({ error: 'Username must be between 3 and 20 characters' });
+  }
+
+  // Strong password criteria - must match frontend
+  const passwordErrors = [];
+  if (password.length < 8) passwordErrors.push("at least 8 characters");
+  if (!/[A-Z]/.test(password)) passwordErrors.push("1 uppercase letter");
+  if (!/[a-z]/.test(password)) passwordErrors.push("1 lowercase letter");
+  if (!/[0-9]/.test(password)) passwordErrors.push("1 number");
+  if (!/[^A-Za-z0-9]/.test(password)) passwordErrors.push("1 special character (!@#$...)");
+
+  if (passwordErrors.length > 0) {
+    return res.status(400).json({ error: `Password must have: ${passwordErrors.join(", ")}` });
   }
 
   try {
@@ -167,8 +178,6 @@ app.post('/api/login', async (req, res) => {
 // --- GET ALL LOGS FOR LOGGED IN USER ---
 app.get('/api/logs', authMiddleware, async (req, res) => {
   try {
-    // req.user was set by authMiddleware! 
-    // It contains { userId: 1 }
     const userId = req.user.userId;
 
     const result = await pool.query(

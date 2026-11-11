@@ -11,7 +11,7 @@ function App() {
   const [profileUsername, setProfileUsername] = useState(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isSignupOpen, setIsSignupOpen] = useState(false)
-  // NEW: track if token exists
+  // Does token exist?
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'))
 
   // Sync page state FROM the URL (used on load + browser Back/Forward)
@@ -30,7 +30,7 @@ function App() {
       setCurrentPage('diary');
       return;
     }
-    // Default: home (covers '/' and any unknown path)
+    // Default: home
     setProfileUsername(null);
     setCurrentPage('home');
   };

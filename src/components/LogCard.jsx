@@ -79,7 +79,6 @@ useEffect(() => {
                     let val = parseInt(e.target.value) || 1
                     if (maxEpisodes && val > maxEpisodes) val = maxEpisodes
                     setEditFrom(val)
-                    // keep To >= From
                     if (editTo < val) setEditTo(val)
                   }}
                   className="w-1/2 p-2 rounded bg-[#1f2028] text-white border border-[#3a3c4a]"
@@ -103,7 +102,7 @@ useEffect(() => {
               </div>
             </div>
 
-            {/* Rating Edit - USING StarRating component */}
+            {/* Rating Edit */}
             <div className="flex flex-col gap-2 text-left">
               <label className="text-sm text-gray-400">Rating</label>
               <StarRating rating={editRating} setRating={setEditRating} />

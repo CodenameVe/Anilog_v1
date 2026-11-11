@@ -128,6 +128,7 @@ useEffect(() => {
             Copy link
           </button>
         </div>
+        
         {/* Header */}
        <div className="flex items-center gap-6 mb-10">
         {user.avatar_url ? (

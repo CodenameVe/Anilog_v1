@@ -8,8 +8,6 @@ export default function Home({ onStartDiary }) {
     { title: 'Jujutsu Kaisen', cover: 'https://cdn.myanimelist.net/images/anime/1171/109222.jpg', year: 2020, score: 9.2 },
   ]);
 
-
-// NEW: 12 unique covers - no repeats
 const marquee = [
   'https://cdn.myanimelist.net/images/anime/1015/138006.jpg', // Frieren
   'https://cdn.myanimelist.net/images/anime/1441/122795.jpg', // SPY x FAMILY
@@ -27,7 +25,7 @@ const marquee = [
 
    return (
     <div className="min-h-screen w-full bg-neutral-950 relative overflow-hidden">
-      {/* Glow - using style so it can't get stripped */}
+      {/* Glow */}
       <div className="absolute top-0 right-0 rounded-full pointer-events-none" style={{ width: 600, height: 600, background: 'rgba(124,58,237,0.25)', filter: 'blur(120px)' }} />
       <div className="absolute bottom-0 left-0 rounded-full pointer-events-none" style={{ width: 500, height: 500, background: 'rgba(217,70,239,0.18)', filter: 'blur(120px)' }} />
 
@@ -54,7 +52,7 @@ const marquee = [
           </div>
         </div>
 
-      {/* RIGHT - GRID, NOT ABSOLUTE - can't stack */}
+      {/* RIGHT - GRID*/}
         {/* Float keyframes*/}
         <style>{`@keyframes float { 0%,100% { transform: translateY(0px) } 50% { transform: translateY(-8px) } }`}</style>
         <div className="grid grid-cols-2 gap-5 max-w-md mx-auto w-full">
@@ -98,10 +96,12 @@ function AnimeCard({ anime }) {
     <div className="w-full bg-zinc-900 border border-violet-500/20 hover:border-violet-500/50 rounded-2xl overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-violet-600/30 hover:-translate-y-2 hover:rotate-0 cursor-pointer">
       <div className="w-full h-60 bg-zinc-900 relative">
         <img src={anime.cover} alt={anime.title} className="w-full h-full object-cover" />
+        
         {/*Rating badge ON the poster */}
         <div className="absolute top-2 left-2 bg-black/70 backdrop-blur px-2 py-1 rounded-full text-xs font-bold text-amber-300 flex items-center gap-1">
           ★ {anime.score}
         </div>
+        
         {/*Year badge */}
         <div className="absolute top-2 right-2 bg-black/70 backdrop-blur px-2 py-1 rounded-full text-xs text-white">
           {anime.year}

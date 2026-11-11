@@ -1,7 +1,7 @@
 import React from "react";
 
 const StarRating = ({ rating = 0, setRating }) => {
-     const isInteractive = !!setRating; // if setRating exists, it's clickable
+     const isInteractive = !!setRating; 
 
   return (
     <div className="flex gap-1">

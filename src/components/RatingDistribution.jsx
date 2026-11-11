@@ -7,7 +7,7 @@ const [open, setOpen] = useState(false);
     logs.forEach(log => {
       if (log.rating) counts[log.rating] = (counts[log.rating] || 0) + 1;
     });
-    const max = Math.max(...Object.values(counts), 1); // avoid divide by 0
+    const max = Math.max(...Object.values(counts), 1);
     return { counts, max, totalRated: logs.filter(l => l.rating).length };
   }, [logs]);
 

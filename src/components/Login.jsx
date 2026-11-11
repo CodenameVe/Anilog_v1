@@ -51,13 +51,12 @@ function Login({ onClose, onLoginSuccess }) {
         localStorage.setItem('avatar_url', data.user.avatar_url);
       }
       if (onLoginSuccess) {
-        onLoginSuccess(data); // this will call handleLoginSuccess in App.jsx
+        onLoginSuccess(data); 
       } else {
         onClose();
       }
       } catch (err) {
         // 1. SECURITY DELAY: Wait 800ms before showing error
-        // This makes "user not found" and "wrong password" take same time
         await new Promise(resolve => setTimeout(resolve, 800));
         // 2. SHOW ERROR
         setLoginError('Invalid email or password. Please try again.');
@@ -65,7 +64,7 @@ function Login({ onClose, onLoginSuccess }) {
         // 3. AUTO-HIDE AFTER 10 SECONDS
         errorTimeoutRef.current = setTimeout(() => {
           setLoginError("");
-        }, 7000); // 10000ms = 10 seconds
+        }, 7000);
       } finally {
         setIsLoading(false);
     }

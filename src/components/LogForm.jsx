@@ -17,23 +17,23 @@ const LogForm = ({ onAddLog }) => {
 
 // Debouncing Search Request
 useEffect(() => {
-  // Don't search if input is empty or too short
+  // No search if empty or short
   if (title.trim().length < 2) {
     setSearchResults([])
     return
   }
 
-  // Don't auto-search if user already picked a show (has a cover selected)
+  // No search if show selected
   if (selectedCover) return
 
   const debounceTimer = setTimeout(() => {
     searchAnime(title)
-  }, 600) // 600ms = wait for user to stop typing
+  }, 600) 
 
-  // Cleanup: if user types again before 600ms, cancel the old timer
+  // Timer resets if user types more
   return () => clearTimeout(debounceTimer)
 
-}, [title]) // <- run this effect every time title changes
+}, [title]) 
 
 
 
@@ -126,7 +126,7 @@ const handleSubmit = async (e) => {
             throw new Error(errData.error || 'Failed to save log');
         }
 
-        const savedRow = await res.json(); // Postgres row with real id
+        const savedRow = await res.json(); 
         console.log("Saved to Postgres:", savedRow);
 
         // MAP backend row -> frontend format for DiaryFeed
@@ -172,7 +172,7 @@ const handleSubmit = async (e) => {
         value={title}
         onChange={(e) => {
         setTitle(e.target.value)
-        setSelectedCover("") // reset cover if they start typing again
+        setSelectedCover("") 
         setMaxEpisodes(null)
         if (errors.title) setErrors({ ...errors, title: null })
         }}
