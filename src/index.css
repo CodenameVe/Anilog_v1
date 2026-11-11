@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+body {
+  background: #16171d;
+  color: #e5e7eb;
+}
+
+@keyframes float {
+          0%, 100% { transform: translateY(0px) rotate(-1deg); }
+          50% { transform: translateY(-12px) rotate(1deg); }
+        }
