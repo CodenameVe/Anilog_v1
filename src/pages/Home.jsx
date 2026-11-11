@@ -25,15 +25,15 @@ const marquee = [
   'https://cdn.myanimelist.net/images/anime/1801/142390.jpg', // Solo Leveling
 ];
 
-  return (
+   return (
     <div className="min-h-screen w-full bg-neutral-950 relative overflow-hidden">
       {/* Glow - using style so it can't get stripped */}
       <div className="absolute top-0 right-0 rounded-full pointer-events-none" style={{ width: 600, height: 600, background: 'rgba(124,58,237,0.25)', filter: 'blur(120px)' }} />
       <div className="absolute bottom-0 left-0 rounded-full pointer-events-none" style={{ width: 500, height: 500, background: 'rgba(217,70,239,0.18)', filter: 'blur(120px)' }} />
 
       <div className="relative z-10 max-w-7xl mx-auto px-6 lg:px-10 py-16 lg:py-20 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-        {/* LEFT */}
-        <div className="max-w-lg">
+        {/* LEFT - centered when stacked, left-aligned on desktop */}
+        <div className="max-w-lg w-full mx-auto lg:mx-0 flex flex-col items-center text-center lg:items-start lg:text-left">
           <p className="text-violet-400 text-sm font-semibold tracking-widest mb-4">✦ YOUR ANIME DIARY</p>
           <h1 className="text-6xl lg:text-7xl font-black leading-none tracking-tight text-white">
             Track the<br />
@@ -47,10 +47,10 @@ const marquee = [
            <button onClick={onStartDiary} className="mt-8 bg-gradient-to-r from-violet-500 to-fuchsia-400 hover:from-violet-400 hover:to-fuchsia-300 text-white font-bold text-lg px-10 py-4 rounded-full transition shadow-lg shadow-violet-500/40 hover:shadow-violet-400/50 hover:scale-105 active:scale-95">
             Start Tracking
           </button>
-          <div className="mt-10 flex flex-wrap gap-3">
+          <div className="mt-10 flex flex-wrap justify-center lg:justify-start gap-3">
             <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white">☆ 10k+ shows</div>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white">◧ Personal Lists</div>
-            <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white">◐ Join 50k+ fans</div>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white">◧ Personal Logs</div>
+            <div className="bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-2.5 text-xs text-white">◐ Save Your Memories</div>
           </div>
         </div>
 
