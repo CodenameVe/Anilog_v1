@@ -8,88 +8,116 @@ import Home from './pages/Home';
 
 function App() {
   const [currentPage, setCurrentPage] = useState("home")
-  const [profileUsername, setProfileUsername] = useState(null); 
+  const [profileUsername, setProfileUsername] = useState(null);
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isSignupOpen, setIsSignupOpen] = useState(false)
   // NEW: track if token exists
   const [isLoggedIn, setIsLoggedIn] = useState(!!localStorage.getItem('token'))
 
-
-// Check URL for profile.
-useEffect(() => {
-  const path = window.location.pathname;
-  if (path.startsWith('/u/')) {
-    const name = path.split('/u/')[1];
-    if (name) {
-      setProfileUsername(name);
-      setCurrentPage('profile');
+  // Sync page state FROM the URL (used on load + browser Back/Forward)
+  const syncPageFromUrl = () => {
+    const path = window.location.pathname;
+    if (path.startsWith('/u/')) {
+      const name = decodeURIComponent(path.split('/u/')[1] || '');
+      if (name) {
+        setProfileUsername(name);
+        setCurrentPage('profile');
+        return;
+      }
     }
+    if (path === '/diary') {
+      setProfileUsername(null);
+      setCurrentPage('diary');
+      return;
+    }
+    // Default: home (covers '/' and any unknown path)
+    setProfileUsername(null);
+    setCurrentPage('home');
+  };
+
+  // Check URL on first load
+  useEffect(() => {
+    syncPageFromUrl();
+  }, []);
+
+  // Listen for browser Back / Forward buttons
+  useEffect(() => {
+    const onPopState = () => syncPageFromUrl();
+    window.addEventListener('popstate', onPopState);
+    return () => window.removeEventListener('popstate', onPopState);
+  }, []);
+
+  // Central helper: change page AND URL together
+  const goTo = (page, url) => {
+    setCurrentPage(page);
+    if (page !== 'profile') {
+      setProfileUsername(null);
+    }
+    window.history.pushState({}, '', url);
+  };
+
+  // Handle profile and home navigation
+  const handleViewProfile = (username) => {
+    const cleanName = username.trim();
+    setProfileUsername(cleanName);
+    setCurrentPage('profile')
+    window.history.pushState({}, '', `/u/${cleanName}`); // Makes URL Shareable
+  };
+
+  const handleBackFromProfile = () => {
+    goTo('home', '/');
+  };
+
+  const handleShowHome = () => {
+    goTo('home', '/');
+  };
+
+  const handleShowDiary = () => {
+    goTo('diary', '/diary');
+  };
+
+  // Login Function
+  const handleLoginSuccess = (data) => {
+    setIsLoggedIn(true)
+    setIsLoginOpen(false)
+    goTo('diary', '/diary');
   }
-}, []);
 
-
-// Handle profile and home navigation
-const handleViewProfile = (username) => {
-  const cleanName = username.trim();
-  setProfileUsername(cleanName);
-  setCurrentPage('profile')
-  window.history.pushState({}, '', `/u/${cleanName}`); // Makes URL Shareable
-};
-
-const handleBackFromProfile = () => {
-  setCurrentPage('home');
-  setProfileUsername(null);
-  window.history.pushState({}, '', '/'); // Reset URL to home
-}
-
-
-
-
-// Login Function
-const handleLoginSuccess = (data) => {
-  setIsLoggedIn(true)
-  setIsLoginOpen(false)
-  setCurrentPage('diary')
-}
-
-// Logout Function
-const handleLogout = () => {
-  localStorage.removeItem('token')
-  localStorage.removeItem('avatar_url')
-  localStorage.removeItem('username')
-  setIsLoggedIn(false)
-  setCurrentPage("home")
-}
-
-
+  // Logout Function
+  const handleLogout = () => {
+    localStorage.removeItem('token')
+    localStorage.removeItem('avatar_url')
+    localStorage.removeItem('username')
+    setIsLoggedIn(false)
+    goTo('home', '/');
+  }
 
   return (
     <>
-      <Navbar 
+      <Navbar
         isLoggedIn={isLoggedIn}
-        onViewProfile ={(username) => handleViewProfile(username)}
-        onShowHome={() => setCurrentPage("home")}
-        onShowDiary={() => setCurrentPage("diary")}
+        onViewProfile={(username) => handleViewProfile(username)}
+        onShowHome={handleShowHome}
+        onShowDiary={handleShowDiary}
         onLoginClick={() => setIsLoginOpen(true)}
         onSignupClick={() => setIsSignupOpen(true)}
         onLogout={handleLogout}
         username={localStorage.getItem('username')}
       />
 
-      {currentPage === 'home' && <Home 
-    onStartDiary={() => {
-      if (isLoggedIn) {
-        setCurrentPage('diary');
-      } else {
-        setIsSignupOpen(true);
-      }
-    }} 
-  />}
+      {currentPage === 'home' && <Home
+        onStartDiary={() => {
+          if (isLoggedIn) {
+            goTo('diary', '/diary');
+          } else {
+            setIsSignupOpen(true);
+          }
+        }}
+      />}
       {currentPage === 'diary' && <DiaryFeed />}
       {currentPage === 'profile' && profileUsername && (
         <PublicProfile username={profileUsername} onBack={handleBackFromProfile} />
-        
-)}
+      )}
 
       {isLoginOpen && <Login onClose={() => setIsLoginOpen(false)} onLoginSuccess={handleLoginSuccess} />}
       {isSignupOpen && <Signup onClose={() => setIsSignupOpen(false)} />}
